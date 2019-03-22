@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# manpgs
+#
+# This is simple replacement script for /usr/bin/man to get Manpages from Web saving disk space
+# Source : https://github.com/saymoncoppi/manpgs 	  # Created: 21/03/2019
+# -------------------------------------------------------------------------
+
+# General Params
+# -------------------------------------------------------------------------
+CURRENT_LANGUAGE=$(locale | grep LANGUAGE | sed -e "s/^LANGUAGE=//" | sed -r 's/(.{2}).*/\1/')
+BASE_URL="https://manpages.debian.org/stable/" 	# Base manpages url
+PROGRAM_NAME=$1 								# Getting program name
+RESULT_TYPE="C"									# Set default result Web Mode or Console Mode
+
+# Getting apps list from all bin folders
+# -------------------------------------------------------------------------
+clear; echo -e "\nFinding $PROGRAM_NAME information..."
+for f in $(compgen  -abckA function ); do # enhanced performance to get commands list
+	if [ "$f" == "$PROGRAM_NAME" ]; then
+		SHOW_RESULTS="Y"
+		break
+	fi
+done
+
+# Display the Manpage
+# -------------------------------------------------------------------------
+if [ $SHOW_RESULTS == "Y" ]; then 
+	# Opening the manual
+		if [ $RESULT_TYPE == "W" ]; then 
+			# Opening Web mode
+			URL=$BASE_URL$PROGRAM_NAME"."$CURRENT_LANGUAGE
+			x-www-browser $URL 	
+		else
+			# Opening Console mode
+			FILE_NAME=$PROGRAM_NAME"."$CURRENT_LANGUAGE".gz"
+			URL=$BASE_URL$FILE_NAME
+			wget -P /tmp $URL -q ; groff -man -Tascii /tmp/$FILE_NAME | less -P "  Manual page $PROGRAM_NAME (press h for help or q to quit) "; rm -rf /tmp/$FILE_NAME	
+		fi
+		clear
+else
+	# Sorry
+	clear; echo -e "\nOps... We don't found $PROGRAM_NAME"
+fi
