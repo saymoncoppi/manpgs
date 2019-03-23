@@ -11,17 +11,17 @@ Seems like silly I know! But nowadays we already use the cloud to store our stuf
 
 ## How install
 **Download the manpgs main script file** \
-(here). 
+(here). \
 <br>
 **Make this an executable** \
-> sudo chmod +x manpgs
+> sudo chmod +x manpgs \
 <br>
 **Install at /bin folder** \
-> install ./manpgs /bin/manpgs
+> install ./manpgs /bin/manpgs \
 <br>
 **Download the manpgs-completion.bash script** \
-(here).
+(here). \
 <br>
 **Source the file:** \
-> source ./manpgs-completion.bash
+> source ./manpgs-completion.bash \
 <br>
