@@ -12,16 +12,16 @@ Seems like silly I know! But nowadays we already use the cloud to store our stuf
 ## How install
 ### Download the manpgs main script file
 (here)
-<br>
+<br />
 ### Make this an executable
 > sudo chmod +x manpgs
-<br>
+<br />
 ### Install at /bin folder
 > install ./manpgs /bin/manpgs
-<br>
+<br />
 ### Download the manpgs-completion.bash script
 (here)
-<br>
+<br />
 ### Source the file
 > source ./manpgs-completion.bash
-<br>
+<br />
