@@ -1,0 +1,9 @@
+# manpgs ranslations (pt)
+# -------------------------------------------------------------------------
+MSG_001="Procurando informações sobre $PROGRAM_NAME ..."
+MSG_002="Manual de $PROGRAM_NAME (pressiones h para ajuda ou q para sair)"
+MSG_003="Ops! Não encontramos \"$PROGRAM_NAME\". Tentar novamente?"
+MSG_004="Ops! Conecte-se a uma rede primeiro!"
+MSG_005="Qual página de manual você procura? "
+MSG_006="Ops! Não foi possivel alcançar o manpgs na Internet. Verifique seu DNS ou Proxy."
+MSG_007="Ops! Você precisa estar online primeiro!"

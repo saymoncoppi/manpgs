@@ -1,0 +1,115 @@
+#!/bin/bash
+#
+# manpgs
+#
+# This is simple replacement script for /usr/bin/man to get Manpages from Web saving disk space
+# Source : https://github.com/saymoncoppi/manpgs 	  # Created: 21/03/2019
+# -------------------------------------------------------------------------
+
+
+
+# General Params
+# -------------------------------------------------------------------------
+CURRENT_LANGUAGE=$(locale | grep LANGUAGE | sed -e "s/^LANGUAGE=//" | sed -r 's/(.{2}).*/\1/')
+BASE_URL="https://manpages.debian.org" 			# Base manpages url
+PROGRAM_NAME=$1 								# Getting program name
+
+
+# Importing parameters
+# -------------------------------------------------------------------------
+. etc/manpgs/manpgs.config
+if [ -e usr/share/manpgs/translations/manpgs_$CURRENT_LANGUAGE ]; then
+    . usr/share/manpgs/translations/manpgs_$CURRENT_LANGUAGE
+else
+    . usr/share/manpgs/translations/manpgs_en
+fi
+
+sleep 5
+
+# Start manpgs function		
+# -------------------------------------------------------------------------
+function manpgs {
+
+
+
+# Getting apps list from all bin folders 		
+# -------------------------------------------------------------------------
+clear; echo $MSG_001
+for f in $(compgen  -abckA function ); do 
+	if [ "$f" == "$PROGRAM_NAME" ]; then
+		SHOW_RESULTS="Y"
+		break
+	fi
+done
+
+
+
+# Display the Manpage
+# -------------------------------------------------------------------------
+if [ $SHOW_RESULTS == "Y" ]; then 
+	# Opening the manual
+		if [ $RESULT_TYPE == "W" ]; then 
+			# Opening Web mode
+			URL=$BASE_URL$PROGRAM_NAME"."$CURRENT_LANGUAGE
+			x-www-browser $URL 	
+		else
+			# Opening Console mode
+			FILE_NAME=$PROGRAM_NAME"."$CURRENT_LANGUAGE".gz"
+			URL=$BASE_URL$FILE_NAME
+			wget -P /tmp $URL -q ; groff -man -Tascii /tmp/$FILE_NAME | less -P "  $MSG_002 "; rm -rf /tmp/$FILE_NAME	
+		fi
+		clear
+else
+	# Ops! We don't found "$PROGRAM_NAME". Try again? [y/N]
+	clear; read -r -p "$MSG_003 [y/N] " response
+	if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]];	then
+		PROGRAM_NAME=''
+		start_manpgs
+	else
+		exit
+	fi
+
+fi
+}
+
+
+
+# Check Connection status and parameter to Run manpgs		
+# -------------------------------------------------------------------------
+
+function start_manpgs {
+	
+	# Check if some interface is connected
+	for interface in $(ls /sys/class/net/ | grep -v lo); do
+		if [[ $(cat /sys/class/net/$interface/carrier) = 1 ]]; then 
+			CONNECTED="Y"
+		fi
+	done
+	
+	# Check if reaches the web
+	if [ "$CONNECTED" == "Y" ]; then 
+		ping -q -w1 -c1 8.8.8.8 &>/dev/null && ONLINE="Y"
+	else
+		echo "$MSG_004"
+		ONLINE="N"
+		exit
+	fi
+	
+	# Check if reaches the BASE_URL
+	if [ "$ONLINE" == "Y" ]; then 
+		wget -q --spider $BASE_URL
+		if [ $? -eq 0 ]; then
+			BASE_URL=$BASE_URL"/stable/" 	# Add "stable" to BASE_URL
+			# run
+			clear; [ -z "$PROGRAM_NAME" ] && read -p "$MSG_005" PROGRAM_NAME && manpgs || manpgs
+		else
+			clear; echo "$MSG_006"
+		fi
+	else
+		echo "$MSG_007"
+	fi
+}
+
+
+
+start_manpgs
