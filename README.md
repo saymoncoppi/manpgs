@@ -10,18 +10,18 @@ This script replaces the man (macros to format man pages) and save some disc spa
 Seems like silly I know! But nowadays we already use the cloud to store our stuffs, so why not also the linux manuals? I hope you enjoy. 
 
 ## How install
-**Download the manpgs main script file** \
-(here). \
+### Download the manpgs main script file
+(here)
 <br>
-**Make this an executable** \
-> sudo chmod +x manpgs \
+### Make this an executable
+> sudo chmod +x manpgs
 <br>
-**Install at /bin folder** \
-> install ./manpgs /bin/manpgs \
+### Install at /bin folder
+> install ./manpgs /bin/manpgs
 <br>
-**Download the manpgs-completion.bash script** \
-(here). \
+### Download the manpgs-completion.bash script
+(here)
 <br>
-**Source the file:** \
-> source ./manpgs-completion.bash \
+### Source the file
+> source ./manpgs-completion.bash
 <br>
